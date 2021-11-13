@@ -961,11 +961,13 @@ local function Read()
 				SendFakeKey(Enum.KeyCode[keyName], isDown)
 			end
 			
+			--[[
 			for buttonName, isDown in pairs(MouseButtonsDown) do
 				if MousePosition then
 					SendFakeMouse(MousePosition[1], MousePosition[2], Enum.UserInputType[buttonName],isDown)
 				end
 			end
+			]]
 			--[[
 			for buttonName, isDown in pairs(MouseButtonsDown) do
 				SendFakeMouse(Enum.UserInputType[buttonName], isDown)
