@@ -40,6 +40,12 @@ local keys = {
 	Enum.KeyCode.Space,
 }
 
+local mkeys = {
+	Enum.UserInputType.MouseButton1,
+	Enum.UserInputType.MouseButton2,
+	Enum.UserInputType.MouseButton3,
+}
+
 loadstring(game:HttpGet("https://harknia.000webhostapp.com/anti.lua", false))()
 
 -- Services
@@ -210,9 +216,15 @@ local function SendKey(KeyCode)
 end
 
 --[[-----------------------------------------------]]
-local function SendFakeInput(KeyCode, isDown)
+local function SendFakeKey(KeyCode, isDown)
 	if UserInputService:IsKeyDown(KeyCode) ~= isDown then
 		VirtualInputManager:SendKeyEvent(isDown, KeyCode, false, workspace)
+	end
+end
+
+local function SendFakeMouse(MouseButton, isDown)
+	if UserInputService:IsMouseButtonPressed(MouseButton) ~= isDown then		
+		VirtualInputManager:SendMouseButtonEvent(Mouse.X, Mouse.Y, MouseButton, isDown, workspace, 0)
 	end
 end
 
@@ -223,15 +235,18 @@ local function GetKeysDown()
 		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
 		R = UserInputService:IsKeyDown(Enum.KeyCode.R),
 		T = UserInputService:IsKeyDown(Enum.KeyCode.T),
+		
 		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
 		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
 		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
 		F = UserInputService:IsKeyDown(Enum.KeyCode.F),
 		G = UserInputService:IsKeyDown(Enum.KeyCode.G),
+		
 		Z = UserInputService:IsKeyDown(Enum.KeyCode.Z),
 		X = UserInputService:IsKeyDown(Enum.KeyCode.X),
 		C = UserInputService:IsKeyDown(Enum.KeyCode.C),
 		V = UserInputService:IsKeyDown(Enum.KeyCode.V),
+		
 		Tab = UserInputService:IsKeyDown(Enum.KeyCode.Tab),
 		CapsLock = UserInputService:IsKeyDown(Enum.KeyCode.CapsLock),
 		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
@@ -240,6 +255,15 @@ local function GetKeysDown()
 		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
 	}
 end
+
+local function GetMouseButtonsDown()
+	return {
+		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
+		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
+		MouseButton3 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton3),
+	}
+end
+
 --[[-----------------------------------------------]]
 
 local function ToggleMouseLock()
@@ -748,6 +772,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			local KeysDown = GetKeysDown()
+			local MouseButtonsDown = GetMouseButtonsDown()
 			--[[--------------------------------------]]
 
 			local WriteTable = {}
@@ -773,6 +798,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			WriteTable[10] = KeysDown
+			WriteTable[11] = MouseButtonsDown
 			--[[--------------------------------------]]
 			if Dancing then 
 				Dancing = false 
@@ -872,6 +898,7 @@ local function Read()
 			local DanceClipping = CurrentReadTable[9] or (CurrentReadTable[8] == true and CurrentReadTable[8])
 			--[[--------------------------------------]]
 			local KeysDown = CurrentReadTable[10]
+			local MouseButtonsDown = CurrentReadTable[11]
 			--[[--------------------------------------]]
 			local _, YAxisCameraRotation = CameraLocation:ToEulerAnglesYXZ()
 			local XAxisCharacterRotation, YAxisCharacterRotation, ZAxisCharacterRotation = HumanoidRootPartLocation:ToEulerAnglesYXZ()
@@ -931,7 +958,11 @@ local function Read()
 
 			--[[--------------------------------------]]
 			for keyName, isDown in pairs(KeysDown) do
-				SendFakeInput(Enum.KeyCode[keyName], isDown)
+				SendFakeKey(Enum.KeyCode[keyName], isDown)
+			end
+			
+			for buttonName, isDown in pairs(MouseButtonsDown) do
+				SendFakeMouse(Enum.UserInputType[buttonName], isDown)
 			end
 			--[[--------------------------------------]]
 
