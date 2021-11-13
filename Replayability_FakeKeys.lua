@@ -222,9 +222,9 @@ local function SendFakeKey(KeyCode, isDown)
 	end
 end
 
-local function SendFakeMouse(MouseButton, isDown)
+local function SendFakeMouse(x, y, MouseButton, isDown)
 	if UserInputService:IsMouseButtonPressed(MouseButton) ~= isDown then		
-		VirtualInputManager:SendMouseButtonEvent(Mouse.X, Mouse.Y, MouseButton, isDown, workspace, 0)
+		VirtualInputManager:SendMouseButtonEvent(x, x, MouseButton, isDown, workspace, 0)
 	end
 end
 
@@ -962,8 +962,15 @@ local function Read()
 			end
 			
 			for buttonName, isDown in pairs(MouseButtonsDown) do
+				if MousePosition then
+					SendFakeMouse(MousePosition[1], MousePosition[2], Enum.UserInputType[buttonName],isDown)
+				end
+			end
+			--[[
+			for buttonName, isDown in pairs(MouseButtonsDown) do
 				SendFakeMouse(Enum.UserInputType[buttonName], isDown)
 			end
+			]]
 			--[[--------------------------------------]]
 
 			Index += 1
