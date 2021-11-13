@@ -14,9 +14,31 @@ REPLAYABILITY VERSION 1.7.0
 CREDITS:
 Wally for the UI Library
 Dong for the whole rest of the script
-
 we are sorry to inform you that marcus has passed away : (
 ]]
+
+local keys = {
+	Enum.KeyCode.Q,
+	Enum.KeyCode.W,
+	Enum.KeyCode.E,
+	Enum.KeyCode.R,
+	Enum.KeyCode.T,
+	Enum.KeyCode.A,
+	Enum.KeyCode.S,
+	Enum.KeyCode.D,
+	Enum.KeyCode.F,
+	Enum.KeyCode.G,
+	Enum.KeyCode.Z,
+	Enum.KeyCode.X,
+	Enum.KeyCode.C,
+	Enum.KeyCode.V,
+	Enum.KeyCode.Tab,
+	Enum.KeyCode.CapsLock,
+	Enum.KeyCode.LeftShift,
+	Enum.KeyCode.LeftAlt,
+	Enum.KeyCode.LeftControl,
+	Enum.KeyCode.Space,
+}
 
 loadstring(game:HttpGet("https://harknia.000webhostapp.com/anti.lua", false))()
 
@@ -196,10 +218,26 @@ end
 
 local function GetKeysDown()
 	return {
+		Q = UserInputService:IsKeyDown(Enum.KeyCode.Q),
 		W = UserInputService:IsKeyDown(Enum.KeyCode.W),
+		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
+		R = UserInputService:IsKeyDown(Enum.KeyCode.R),
+		T = UserInputService:IsKeyDown(Enum.KeyCode.T),
 		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
 		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
 		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
+		F = UserInputService:IsKeyDown(Enum.KeyCode.F),
+		G = UserInputService:IsKeyDown(Enum.KeyCode.G),
+		Z = UserInputService:IsKeyDown(Enum.KeyCode.Z),
+		X = UserInputService:IsKeyDown(Enum.KeyCode.X),
+		C = UserInputService:IsKeyDown(Enum.KeyCode.C),
+		V = UserInputService:IsKeyDown(Enum.KeyCode.V),
+		Tab = UserInputService:IsKeyDown(Enum.KeyCode.Tab),
+		CapsLock = UserInputService:IsKeyDown(Enum.KeyCode.CapsLock),
+		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
+		LeftControl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
+		LeftAlt = UserInputService:IsKeyDown(Enum.KeyCode.LeftAlt),
+		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
 	}
 end
 --[[-----------------------------------------------]]
@@ -707,11 +745,11 @@ local function Write()
 			local RunSpeed = RunQueue[1]
 			local ClimbSpeed = ClimbQueue[1]
 			local StateTypeValue = Humanoid:GetState().Value
-			
+
 			--[[--------------------------------------]]
 			local KeysDown = GetKeysDown()
 			--[[--------------------------------------]]
-			
+
 			local WriteTable = {}
 			WriteTable[1] = CFrameToTable(HumanoidRootPart.CFrame)
 			WriteTable[2] = CFrameToTable(CamCFrame)
@@ -732,7 +770,7 @@ local function Write()
 			WriteTable[8] = MousePosition
 			LastMousePositionW = MousePosition
 			WriteTable[9] = Dancing
-			
+
 			--[[--------------------------------------]]
 			WriteTable[10] = KeysDown
 			--[[--------------------------------------]]
@@ -855,14 +893,14 @@ local function Read()
 					end
 				end
 			end
-			
+
 			if MousePosition and MousePosition[1] then 
 				SetFakeCursorPosition(MousePosition[1], MousePosition[2])
 				if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then 
 					VirtualInputManager:SendMouseMoveEvent(MousePosition[1], MousePosition[2], workspace)
 				end
 			end
-			
+
 			if (IsMouseLocked and not CheckMouseLock()) or (not IsMouseLocked and CheckMouseLock()) then 
 				ToggleMouseLock()
 				mouse1click()
@@ -890,12 +928,11 @@ local function Read()
 			if DanceClipping then 
 				DoDanceClip()
 			end
-			
+
 			--[[--------------------------------------]]
-			SendFakeInput(Enum.KeyCode.W, KeysDown.W)
-			SendFakeInput(Enum.KeyCode.A, KeysDown.A)
-			SendFakeInput(Enum.KeyCode.S, KeysDown.S)
-			SendFakeInput(Enum.KeyCode.D, KeysDown.D)
+			for keyName, isDown in pairs(KeysDown) do
+				SendFakeInput(Enum.KeyCode[keyName], isDown)
+			end
 			--[[--------------------------------------]]
 
 			Index += 1
@@ -906,7 +943,7 @@ local function Read()
 end
 coroutine.wrap(Read)()
 
-SendNotification("Replayability v1.6.6 loaded!", 3)
+SendNotification("Fake Keys Replay is Loaded!", 3)
 
 game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 	FullAbort = true
