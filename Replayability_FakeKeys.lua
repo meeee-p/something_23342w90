@@ -260,6 +260,24 @@ local function SendFakeInput(KeyCode, isDown)
 	end
 end
 
+local function SendFakeMouseClick(name, isDown)
+	local value = Enum.UserInputType[name].Value + 1
+	
+	if value == 1 then
+		if isDown then
+			mouse1press()
+		else
+			mouse1release()
+		end
+	elseif value == 2 then
+		if isDown then
+			mouse2press()
+		else
+			mouse2release()
+		end		
+	end
+end
+
 local function GetKeysDown()
 	return {
 		Q = UserInputService:IsKeyDown(Enum.KeyCode.Q),
@@ -292,7 +310,7 @@ local function GetMouseButtonsDown()
 	return {
 		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
 		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
-		MouseButton3 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton3),
+		--MouseButton3 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton3),
 	}
 end
 
