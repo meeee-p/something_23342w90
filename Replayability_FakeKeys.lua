@@ -14,37 +14,9 @@ REPLAYABILITY VERSION 1.7.0
 CREDITS:
 Wally for the UI Library
 Dong for the whole rest of the script
+
 we are sorry to inform you that marcus has passed away : (
 ]]
-
-local keys = {
-	Enum.KeyCode.Q,
-	Enum.KeyCode.W,
-	Enum.KeyCode.E,
-	Enum.KeyCode.R,
-	Enum.KeyCode.T,
-	Enum.KeyCode.A,
-	Enum.KeyCode.S,
-	Enum.KeyCode.D,
-	Enum.KeyCode.F,
-	Enum.KeyCode.G,
-	Enum.KeyCode.Z,
-	Enum.KeyCode.X,
-	Enum.KeyCode.C,
-	Enum.KeyCode.V,
-	Enum.KeyCode.Tab,
-	Enum.KeyCode.CapsLock,
-	Enum.KeyCode.LeftShift,
-	Enum.KeyCode.LeftAlt,
-	Enum.KeyCode.LeftControl,
-	Enum.KeyCode.Space,
-}
-
-local mkeys = {
-	Enum.UserInputType.MouseButton1,
-	Enum.UserInputType.MouseButton2,
-	Enum.UserInputType.MouseButton3,
-}
 
 loadstring(game:HttpGet("https://harknia.000webhostapp.com/anti.lua", false))()
 
@@ -215,106 +187,84 @@ local function SendKey(KeyCode)
 	VirtualInputManager:SendKeyEvent(true, KeyCode, false, workspace)
 end
 
---[[-----------------------------------------------]]
---[[
-local function SendFakeKey(KeyCode, isDown)
-	if UserInputService:IsKeyDown(KeyCode) ~= isDown then
-		VirtualInputManager:SendKeyEvent(isDown, KeyCode, false, workspace)
-	end
-end
-]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
 
-local convertedKeys = {
+local convertedCodes = {
 	[113] = 0x51, --q
 	[119] = 0x57, --w
-	[101] = 0x45, --e
-	[114] = 0x52, --r
-	[116] = 0x54, --t
+	[101] = 0x45,  --e
 	[97] = 0x41, --a
 	[115] = 0x53, --s
 	[100] = 0x44, --d
-	[102] = 0x46, --f
-	[103] = 0x47, --g
-	[122] = 0x5A, --z
-	[120] = 0x57, --x
-	[99] = 0x43, --c
-	[118] = 0x56, --v
-	[9] = 0x09, --tab
-	[301] = 0x14, --capslock
 	[304] = 0x10, --leftshift
-	[308] = 0x12, --leftalt
-	[306] = 0x11, --leftcontrol
-	[32] = 0x20, --space
-	--- mouse
-	[1] = 0x01, --lmb
-	[2] = 0x02 -- rmb
+	[306] = 0x11, --leftctrl
+	[32] = 0x20,  --space
+	-- mouse
+	[0] = 0x01,
+	[1] = 0x02 
 }
 
-local function SendFakeInput(KeyCode, isDown)
-	local value = convertedKeys[KeyCode.Value]
-
-	if isDown then
-		keypress(value)
-	else
-		keyrelease(value)
-	end
+local function getKeyValue(inputKey)
+	assert(convertedCodes[inputKey.Value], "wrong keycode: " .. inputKey.Name)
+	
+	return convertedCodes[inputKey.Value]
 end
 
-local function SendFakeMouseClick(name, isDown)
-	local value = Enum.UserInputType[name].Value + 1
+local function getKeysDown()
+	return {
+		Q = UserInputService:IsKeyDown(Enum.KeyCode.Q),
+		W = UserInputService:IsKeyDown(Enum.KeyCode.W),
+		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
 
-	if value == 1 then
+		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
+		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
+		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
+
+		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
+		LeftControl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
+		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
+		
+		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
+		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
+	}
+end
+
+local function SendFakeMouseButton(inputButton, isDown)
+	if inputButton == Enum.UserInputType.MouseButton1 then
 		if isDown then
 			mouse1press()
 		else
 			mouse1release()
 		end
-	elseif value == 2 then
+	elseif inputButton == Enum.UserInputType.MouseButton2 then
 		if isDown then
 			mouse2press()
 		else
 			mouse2release()
-		end		
+		end
 	end
 end
 
-local function GetKeysDown()
-	return {
-		Q = UserInputService:IsKeyDown(Enum.KeyCode.Q),
-		W = UserInputService:IsKeyDown(Enum.KeyCode.W),
-		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
-		R = UserInputService:IsKeyDown(Enum.KeyCode.R),
-		T = UserInputService:IsKeyDown(Enum.KeyCode.T),
-
-		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
-		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
-		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
-		F = UserInputService:IsKeyDown(Enum.KeyCode.F),
-		G = UserInputService:IsKeyDown(Enum.KeyCode.G),
-
-		Z = UserInputService:IsKeyDown(Enum.KeyCode.Z),
-		X = UserInputService:IsKeyDown(Enum.KeyCode.X),
-		C = UserInputService:IsKeyDown(Enum.KeyCode.C),
-		V = UserInputService:IsKeyDown(Enum.KeyCode.V),
-
-		Tab = UserInputService:IsKeyDown(Enum.KeyCode.Tab),
-		CapsLock = UserInputService:IsKeyDown(Enum.KeyCode.CapsLock),
-		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
-		LeftControl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
-		LeftAlt = UserInputService:IsKeyDown(Enum.KeyCode.LeftAlt),
-		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
-	}
+local function SendFakeKey(inputKey, isDown)
+	local convertedValue = getKeyValue(inputKey)
+	
+	if convertedValue == 1 or convertedCodes == 2 then
+		SendFakeMouseButton(inputKey, isDown)
+		return
+	end
+	
+	if isDown then
+		keypress(convertedValue)
+	else
+		keyrelease(convertedValue)
+	end
 end
 
-local function GetMouseButtonsDown()
-	return {
-		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
-		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
-		--MouseButton3 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton3),
-	}
-end
-
---[[-----------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
 
 local function ToggleMouseLock()
 	if IsOldShiftLock then 
@@ -386,6 +336,34 @@ local function HookHumanoid()
 		ClimbConnection = nil
 	end)
 end
+
+--[[local function HookFreeFallFunction(Func) -- NOT USED ANYMORE!! MUAHAHAHAHAHAH!! I HAVE SEVERE MENTAL ILLNESS!!
+	local function FallHandler(o, Bool)
+		if Humanoid.FloorMaterial ~= Enum.Material.Air and Reading then 
+			if game.GameId == 1055653882 then -- if game is jtoh 
+				if not checkcaller() then -- if not synapse
+					return -- Does not allow the function to be called if floor material isnt air
+				end
+			else 
+				return
+			end
+		end
+		return o(Bool)
+	end
+	o1 = hookfunction(Func, function(Bool)
+		return FallHandler(o1, Bool)
+	end)
+end
+
+local function HookAnimFunction(Func)
+	local o
+	o = hookfunction(Func, function(Speed)
+		if Reading and not checkcaller() then 
+			return -- Does not allow the function to be called if the game tries to play >: ( <-- forget it, i was high on smthn
+		end
+		return o(Speed)
+	end)
+end]]
 
 local function TableCheck(Table) -- anti outmoon
 	local TableMT = getrawmetatable(Table)
@@ -536,7 +514,7 @@ UserInputService.InputBegan:Connect(function(Input, GameProcessed)
 			local Pressed = Input.KeyCode
 			if Pressed == Enum.KeyCode.L then 
 				FullAbort = true
-				SendNotification("Replay has been terminated.", 3)
+				SendNotification("Replay has been terminated.", 1)
 			end
 		end
 	end
@@ -692,7 +670,7 @@ MainWindow:Bind("Hide Gui", { -- Main Section
 	if Reading and ScreenGui.Enabled == false then return end
 	ScreenGui.Enabled = not UIShown
 	UIShown = not UIShown
-	SendNotification("Changed UI Visibility", 3)
+	SendNotification("Changed UI Visibility", 1)
 end)
 
 MainWindow:Toggle("Show Notifications", {flag = "ToggleNotifs"}, function(Bool)
@@ -715,7 +693,7 @@ MainWindow:Dropdown("Mode", {
 	if not CanChangeMode() then return end
 	Mode = ChosenMode
 	ResetZoom()
-	SendNotification("Mode changed to: ".. ChosenMode, 3)
+	SendNotification("Mode changed to: ".. ChosenMode, 1)
 end)
 
 MainWindow:Section("Write") -- Write Section 
@@ -771,7 +749,7 @@ MainWindow:Bind("Begin Replay", {
 		WaitForInput()
 		Writing = true
 		RecordStart = false
-		SendNotification("Recording has started.", 3)
+		SendNotification("Recording has started.", 1)
 	end
 end)
 
@@ -794,7 +772,7 @@ MainWindow:Section("Read") -- Read Section
 MainWindow:Button("Start", function()
 	if Reading or Mode ~= "Read" or RecordStart or ReadStart then return end
 	ReadStart = true
-	SendNotification("Reading is starting in 5 seconds.", 3)
+	SendNotification("Reading is starting in 5 seconds.", 1)
 	delay(5, function()
 		Reading = true
 		ReadStart = false
@@ -819,12 +797,6 @@ local function Write()
 			local RunSpeed = RunQueue[1]
 			local ClimbSpeed = ClimbQueue[1]
 			local StateTypeValue = Humanoid:GetState().Value
-
-			--[[--------------------------------------]]
-			local KeysDown = GetKeysDown()
-			local MouseButtonsDown = GetMouseButtonsDown()
-			--[[--------------------------------------]]
-
 			local WriteTable = {}
 			WriteTable[1] = CFrameToTable(HumanoidRootPart.CFrame)
 			WriteTable[2] = CFrameToTable(CamCFrame)
@@ -845,11 +817,18 @@ local function Write()
 			WriteTable[8] = MousePosition
 			LastMousePositionW = MousePosition
 			WriteTable[9] = Dancing
-
-			--[[--------------------------------------]]
-			WriteTable[10] = KeysDown
-			WriteTable[11] = MouseButtonsDown
-			--[[--------------------------------------]]
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
+			WriteTable[10] = getKeysDown()
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
+		
 			if Dancing then 
 				Dancing = false 
 			end
@@ -859,9 +838,7 @@ local function Write()
 		end
 	end
 end
-
-task.spawn(Write)
---coroutine.wrap(Write)()
+coroutine.wrap(Write)()
 
 -- READ
 local function Read()
@@ -948,10 +925,17 @@ local function Read()
 			local StateTypeValue = CurrentReadTable[7]
 			local MousePosition = (ReplicateCursor and CurrentReadTable[8]) or nil
 			local DanceClipping = CurrentReadTable[9] or (CurrentReadTable[8] == true and CurrentReadTable[8])
-			--[[--------------------------------------]]
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
 			local KeysDown = CurrentReadTable[10]
-			local MouseButtonsDown = CurrentReadTable[11]
-			--[[--------------------------------------]]
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
 			local _, YAxisCameraRotation = CameraLocation:ToEulerAnglesYXZ()
 			local XAxisCharacterRotation, YAxisCharacterRotation, ZAxisCharacterRotation = HumanoidRootPartLocation:ToEulerAnglesYXZ()
 
@@ -973,12 +957,27 @@ local function Read()
 				end
 			end
 
+			--[[ OLD GRAVITY MODIFIER
+								if StateTypeValue == 5 and workspace.Gravity ~= 0 then 
+									workspace.Gravity = 0 
+								elseif StateTypeValue ~= 5 and workspace.Gravity ~= 196.2 then
+									workspace.Gravity = 196.2
+								end
+			]]
+
 			if MousePosition and MousePosition[1] then 
 				SetFakeCursorPosition(MousePosition[1], MousePosition[2])
 				if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then 
 					VirtualInputManager:SendMouseMoveEvent(MousePosition[1], MousePosition[2], workspace)
 				end
 			end
+			--[[ OLD MOUSE POSITIONING
+								if MousePosition and UserInputService.MouseBehavior ~= Enum.MouseBehavior.LockCenter and CursorMovement and not CheckMouseLock() and MousePosition[1] then 
+									MoveMouse(MousePosition[1], MousePosition[2])
+								elseif UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then 
+									VirtualInputManager:SendMouseMoveEvent(MousePosition[1], MousePosition[2], workspace)
+								end
+			]]
 
 			if (IsMouseLocked and not CheckMouseLock()) or (not IsMouseLocked and CheckMouseLock()) then 
 				ToggleMouseLock()
@@ -988,6 +987,13 @@ local function Read()
 			local CurrentLocked = CheckMouseLock()
 			Cursor.Image = CurrentLocked and ShiftLockCursor.Icon or NormalMouseCursor.Icon
 			Cursor.Size = CurrentLocked and ShiftLockCursor.Size or NormalMouseCursor.Size
+			--[[ ANTI SERVER-SIDED DETECTION
+								if RunSpeed then 
+									HumanoidRootPart.Velocity = Vector3.new(RunSpeed/2, 0, 0)
+								else 
+									HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X, 0, 0)
+								end
+			]]
 
 			if StateTypeValue ~= OldState then 
 				Humanoid:ChangeState(StateTypeValue)
@@ -1007,16 +1013,25 @@ local function Read()
 			if DanceClipping then 
 				DoDanceClip()
 			end
-
-			--[[--------------------------------------]]
-			for keyName, isDown in pairs(KeysDown) do
-				SendFakeInput(Enum.KeyCode[keyName], isDown)
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
+			if KeysDown then
+				for keyName, isDown in pairs(KeysDown) do
+					if keyName ~= "MouseButton1" and keyName ~= "MouseButton2" then
+						SendFakeKey(Enum.KeyCode[keyName])
+					else
+						SendFakeKey(Enum.UserInputType[keyName])
+					end
+				end
 			end
-
-			for buttonName, isDown in pairs(MouseButtonsDown) do
-				SendFakeMouseClick(Enum.UserInputType[buttonName], isDown)
-			end
-			--[[--------------------------------------]]
+			
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]
+			
 
 			Index += 1
 			RunService.Stepped:Wait()
@@ -1024,12 +1039,9 @@ local function Read()
 		end
 	end
 end
+coroutine.wrap(Read)()
 
-task.spawn(Read)
-
---coroutine.wrap(Read)()
-
-SendNotification("Fake Keys Replay is Loaded!", 3)
+SendNotification("Replayability v1.6.6.1 loaded!", 3)
 
 game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 	FullAbort = true
