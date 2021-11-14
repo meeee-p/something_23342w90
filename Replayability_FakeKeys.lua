@@ -804,7 +804,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			local KeysDown = GetKeysDown()
-			--local MouseButtonsDown = GetMouseButtonsDown()
+			local MouseButtonsDown = GetMouseButtonsDown()
 			--[[--------------------------------------]]
 
 			local WriteTable = {}
@@ -830,7 +830,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			WriteTable[10] = KeysDown
-			--WriteTable[11] = MouseButtonsDown
+			WriteTable[11] = MouseButtonsDown
 			--[[--------------------------------------]]
 			if Dancing then 
 				Dancing = false 
@@ -930,7 +930,7 @@ local function Read()
 			local DanceClipping = CurrentReadTable[9] or (CurrentReadTable[8] == true and CurrentReadTable[8])
 			--[[--------------------------------------]]
 			local KeysDown = CurrentReadTable[10]
-			--local MouseButtonsDown = CurrentReadTable[11]
+			local MouseButtonsDown = CurrentReadTable[11]
 			--[[--------------------------------------]]
 			local _, YAxisCameraRotation = CameraLocation:ToEulerAnglesYXZ()
 			local XAxisCharacterRotation, YAxisCharacterRotation, ZAxisCharacterRotation = HumanoidRootPartLocation:ToEulerAnglesYXZ()
@@ -992,11 +992,10 @@ local function Read()
 			for keyName, isDown in pairs(KeysDown) do
 				SendFakeInput(Enum.KeyCode[keyName], isDown)
 			end
-			--[[
+			
 			for buttonName, isDown in pairs(MouseButtonsDown) do
 				SendFakeInput(Enum.UserInputType[buttonName], isDown)
 			end
-			]]
 			--[[--------------------------------------]]
 
 			Index += 1
