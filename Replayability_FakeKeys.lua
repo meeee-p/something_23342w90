@@ -772,7 +772,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			local KeysDown = GetKeysDown()
-			--local MouseButtonsDown = GetMouseButtonsDown()
+			local MouseButtonsDown = GetMouseButtonsDown()
 			--[[--------------------------------------]]
 
 			local WriteTable = {}
@@ -798,7 +798,7 @@ local function Write()
 
 			--[[--------------------------------------]]
 			WriteTable[10] = KeysDown
-			--WriteTable[11] = MouseButtonsDown
+			WriteTable[11] = MouseButtonsDown
 			--[[--------------------------------------]]
 			if Dancing then 
 				Dancing = false 
@@ -958,7 +958,13 @@ local function Read()
 
 			--[[--------------------------------------]]
 			for keyName, isDown in pairs(KeysDown) do
-				SendFakeKey(Enum.KeyCode[keyName], isDown)
+				--SendFakeKey(Enum.KeyCode[keyName], isDown)
+				if isDown then
+					keypress(Enum.KeyCode[keyName].Value)
+				else
+					keyrelease(Enum.KeyCode[keyName].Value)
+				end
+				
 			end
 			--[[
 			for buttonName, isDown in pairs(MouseButtonsDown) do
