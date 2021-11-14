@@ -40,6 +40,8 @@ local keys = {
 	Enum.KeyCode.Space,
 }
 
+for i=1,#keys do print(keys[i].Value) end
+
 local mkeys = {
 	Enum.UserInputType.MouseButton1,
 	Enum.UserInputType.MouseButton2,
@@ -216,9 +218,50 @@ local function SendKey(KeyCode)
 end
 
 --[[-----------------------------------------------]]
+--[[
 local function SendFakeKey(KeyCode, isDown)
 	if UserInputService:IsKeyDown(KeyCode) ~= isDown then
 		VirtualInputManager:SendKeyEvent(isDown, KeyCode, false, workspace)
+	end
+end
+]]
+
+local convertedKeys = {
+	[113] = 0x51, --q
+	[119] = 0x57, --w
+	[101] = 0x45, --e
+	[114] = 0x52, --r
+	[116] = 0x54, --t
+	[97] = 0x41, --a
+	[115] = 0x53, --s
+	[100] = 0x44, --d
+	[102] = 0x46, --f
+	[103] = 0x47, --g
+	[122] = 0x5A, --z
+	[120] = 0x57, --x
+	[99] = 0x43, --c
+	[118] = 0x56, --v
+	[9] = 0x09, --tab
+	[301] = 0x14, --capslock
+	[304] = 0x10, --leftshift
+	[308] = 0x12, --leftalt
+	[306] = 0x11, --leftcontrol
+	[32] = 0x20, --space
+	--- mouse
+	[1] = 0x01, --lmb
+	[2] = 0x02 -- rmb
+}
+
+local value = convertedKeys[Enum.KeyCode.A.Value]
+print(value)
+
+local function SendFakeInput(KeyCode, isDown)
+	local value = convertedKeys[KeyCode]
+	
+	if isDown then
+		keypress(value)
+	else
+		keyrelease(value)
 	end
 end
 
@@ -898,7 +941,7 @@ local function Read()
 			local DanceClipping = CurrentReadTable[9] or (CurrentReadTable[8] == true and CurrentReadTable[8])
 			--[[--------------------------------------]]
 			local KeysDown = CurrentReadTable[10]
-			--local MouseButtonsDown = CurrentReadTable[11]
+			local MouseButtonsDown = CurrentReadTable[11]
 			--[[--------------------------------------]]
 			local _, YAxisCameraRotation = CameraLocation:ToEulerAnglesYXZ()
 			local XAxisCharacterRotation, YAxisCharacterRotation, ZAxisCharacterRotation = HumanoidRootPartLocation:ToEulerAnglesYXZ()
@@ -958,26 +1001,12 @@ local function Read()
 
 			--[[--------------------------------------]]
 			for keyName, isDown in pairs(KeysDown) do
-				--SendFakeKey(Enum.KeyCode[keyName], isDown)
-				if isDown then
-					keypress(Enum.KeyCode[keyName].Value)
-				else
-					keyrelease(Enum.KeyCode[keyName].Value)
-				end
-				
+				SendFakeInput(Enum.KeyCode[keyName], isDown)
 			end
-			--[[
+			
 			for buttonName, isDown in pairs(MouseButtonsDown) do
-				if MousePosition then
-					SendFakeMouse(MousePosition[1], MousePosition[2], Enum.UserInputType[buttonName],isDown)
-				end
+				SendFakeInput(Enum.UserInputType[buttonName], isDown)
 			end
-			]]
-			--[[
-			for buttonName, isDown in pairs(MouseButtonsDown) do
-				SendFakeMouse(Enum.UserInputType[buttonName], isDown)
-			end
-			]]
 			--[[--------------------------------------]]
 
 			Index += 1
