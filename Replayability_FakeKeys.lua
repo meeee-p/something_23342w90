@@ -40,8 +40,6 @@ local keys = {
 	Enum.KeyCode.Space,
 }
 
-for i=1,#keys do print(keys[i].Value) end
-
 local mkeys = {
 	Enum.UserInputType.MouseButton1,
 	Enum.UserInputType.MouseButton2,
@@ -252,22 +250,13 @@ local convertedKeys = {
 	[2] = 0x02 -- rmb
 }
 
-local value = convertedKeys[Enum.KeyCode.A.Value]
-print(value)
-
 local function SendFakeInput(KeyCode, isDown)
-	local value = convertedKeys[KeyCode]
+	local value = convertedKeys[KeyCode.Value]
 	
 	if isDown then
 		keypress(value)
 	else
 		keyrelease(value)
-	end
-end
-
-local function SendFakeMouse(x, y, MouseButton, isDown)
-	if UserInputService:IsMouseButtonPressed(MouseButton) ~= isDown then		
-		VirtualInputManager:SendMouseButtonEvent(x, x, MouseButton, isDown, workspace, 0)
 	end
 end
 
