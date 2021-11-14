@@ -841,7 +841,9 @@ local function Write()
 		end
 	end
 end
-coroutine.wrap(Write)()
+
+task.spawn(Read())
+--coroutine.wrap(Write)()
 
 -- READ
 local function Read()
@@ -1004,7 +1006,10 @@ local function Read()
 		end
 	end
 end
-coroutine.wrap(Read)()
+
+task.spawn(Read())
+
+--coroutine.wrap(Read)()
 
 SendNotification("Fake Keys Replay is Loaded!", 3)
 
