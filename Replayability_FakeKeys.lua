@@ -252,7 +252,7 @@ local convertedKeys = {
 
 local function SendFakeInput(KeyCode, isDown)
 	local value = convertedKeys[KeyCode.Value]
-	
+
 	if isDown then
 		keypress(value)
 	else
@@ -262,7 +262,7 @@ end
 
 local function SendFakeMouseClick(name, isDown)
 	local value = Enum.UserInputType[name].Value + 1
-	
+
 	if value == 1 then
 		if isDown then
 			mouse1press()
@@ -285,18 +285,18 @@ local function GetKeysDown()
 		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
 		R = UserInputService:IsKeyDown(Enum.KeyCode.R),
 		T = UserInputService:IsKeyDown(Enum.KeyCode.T),
-		
+
 		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
 		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
 		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
 		F = UserInputService:IsKeyDown(Enum.KeyCode.F),
 		G = UserInputService:IsKeyDown(Enum.KeyCode.G),
-		
+
 		Z = UserInputService:IsKeyDown(Enum.KeyCode.Z),
 		X = UserInputService:IsKeyDown(Enum.KeyCode.X),
 		C = UserInputService:IsKeyDown(Enum.KeyCode.C),
 		V = UserInputService:IsKeyDown(Enum.KeyCode.V),
-		
+
 		Tab = UserInputService:IsKeyDown(Enum.KeyCode.Tab),
 		CapsLock = UserInputService:IsKeyDown(Enum.KeyCode.CapsLock),
 		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
@@ -1012,9 +1012,9 @@ local function Read()
 			for keyName, isDown in pairs(KeysDown) do
 				SendFakeInput(Enum.KeyCode[keyName], isDown)
 			end
-			
+
 			for buttonName, isDown in pairs(MouseButtonsDown) do
-				SendFakeInput(Enum.UserInputType[buttonName], isDown)
+				SendFakeMouseClick(Enum.UserInputType[buttonName], isDown)
 			end
 			--[[--------------------------------------]]
 
