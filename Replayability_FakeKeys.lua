@@ -842,7 +842,7 @@ local function Write()
 	end
 end
 
-task.spawn(Read())
+task.spawn(Write)
 --coroutine.wrap(Write)()
 
 -- READ
@@ -1007,7 +1007,7 @@ local function Read()
 	end
 end
 
-task.spawn(Read())
+task.spawn(Read)
 
 --coroutine.wrap(Read)()
 
