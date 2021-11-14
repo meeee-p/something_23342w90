@@ -214,20 +214,20 @@ end
 
 local function getKeysDown()
 	return {
-		Q = UserInputService:IsKeyDown(Enum.KeyCode.Q),
-		W = UserInputService:IsKeyDown(Enum.KeyCode.W),
-		E = UserInputService:IsKeyDown(Enum.KeyCode.E),
+		UserInputService:IsKeyDown(Enum.KeyCode.Q),
+		UserInputService:IsKeyDown(Enum.KeyCode.W),
+		UserInputService:IsKeyDown(Enum.KeyCode.E),
 
-		A = UserInputService:IsKeyDown(Enum.KeyCode.A),
-		S = UserInputService:IsKeyDown(Enum.KeyCode.S),
-		D = UserInputService:IsKeyDown(Enum.KeyCode.D),
+		UserInputService:IsKeyDown(Enum.KeyCode.A),
+		UserInputService:IsKeyDown(Enum.KeyCode.S),
+		UserInputService:IsKeyDown(Enum.KeyCode.D),
 
-		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
-		LeftControl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
-		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
+		UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
+		UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
+		UserInputService:IsKeyDown(Enum.KeyCode.Space),
 
-		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
-		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
+		UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
+		UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
 	}
 end
 
@@ -249,11 +249,6 @@ end
 
 local function SendFakeKey(inputKey, isDown)
 	local convertedValue = getKeyValue(inputKey)
-
-	if convertedValue == 1 or convertedValue == 2 then
-		SendFakeMouseButton(inputKey, isDown)
-		return
-	end
 
 	if isDown then
 		keypress(convertedValue)
@@ -1016,16 +1011,23 @@ local function Read()
 
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			--[[----------------------------------------------------------------------------------]]
+			--[[----------------------------------------------------------------------------------]]	
 
 			if KeysDown then
-				for keyName, isDown in pairs(KeysDown) do
-					if keyName ~= "MouseButton1" and keyName ~= "MouseButton2" then
-						SendFakeKey(Enum.KeyCode[keyName])
-					else
-						SendFakeKey(Enum.UserInputType[keyName])
-					end
-				end
+				SendFakeKey(Enum.KeyCode.Q, KeysDown[1])
+				SendFakeKey(Enum.KeyCode.W, KeysDown[2])
+				SendFakeKey(Enum.KeyCode.E, KeysDown[3])
+				
+				SendFakeKey(Enum.KeyCode.A, KeysDown[4])
+				SendFakeKey(Enum.KeyCode.S, KeysDown[5])
+				SendFakeKey(Enum.KeyCode.D, KeysDown[6])
+				
+				SendFakeKey(Enum.KeyCode.LeftShift, KeysDown[7])
+				SendFakeKey(Enum.KeyCode.LeftControl, KeysDown[8])
+				SendFakeKey(Enum.KeyCode.Space, KeysDown[9])
+				
+				SendFakeMouseButton(Enum.UserInputType.MouseButton1, KeysDown[10])
+				SendFakeMouseButton(Enum.UserInputType.MouseButton2, KeysDown[11])
 			end
 
 			--[[----------------------------------------------------------------------------------]]
