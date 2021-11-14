@@ -208,7 +208,7 @@ local convertedCodes = {
 
 local function getKeyValue(inputKey)
 	assert(convertedCodes[inputKey.Value], "wrong keycode: " .. inputKey.Name)
-	
+
 	return convertedCodes[inputKey.Value]
 end
 
@@ -225,7 +225,7 @@ local function getKeysDown()
 		LeftShift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift),
 		LeftControl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl),
 		Space = UserInputService:IsKeyDown(Enum.KeyCode.Space),
-		
+
 		MouseButton1 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
 		MouseButton2 = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
 	}
@@ -249,12 +249,12 @@ end
 
 local function SendFakeKey(inputKey, isDown)
 	local convertedValue = getKeyValue(inputKey)
-	
-	if convertedValue == 1 or convertedCodes == 2 then
+
+	if convertedValue == 1 or convertedValue == 2 then
 		SendFakeMouseButton(inputKey, isDown)
 		return
 	end
-	
+
 	if isDown then
 		keypress(convertedValue)
 	else
@@ -817,18 +817,18 @@ local function Write()
 			WriteTable[8] = MousePosition
 			LastMousePositionW = MousePosition
 			WriteTable[9] = Dancing
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
+
 			WriteTable[10] = getKeysDown()
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
-		
+
+
 			if Dancing then 
 				Dancing = false 
 			end
@@ -925,17 +925,17 @@ local function Read()
 			local StateTypeValue = CurrentReadTable[7]
 			local MousePosition = (ReplicateCursor and CurrentReadTable[8]) or nil
 			local DanceClipping = CurrentReadTable[9] or (CurrentReadTable[8] == true and CurrentReadTable[8])
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
+
 			local KeysDown = CurrentReadTable[10]
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
+
 			local _, YAxisCameraRotation = CameraLocation:ToEulerAnglesYXZ()
 			local XAxisCharacterRotation, YAxisCharacterRotation, ZAxisCharacterRotation = HumanoidRootPartLocation:ToEulerAnglesYXZ()
 
@@ -1013,11 +1013,11 @@ local function Read()
 			if DanceClipping then 
 				DoDanceClip()
 			end
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
+
 			if KeysDown then
 				for keyName, isDown in pairs(KeysDown) do
 					if keyName ~= "MouseButton1" and keyName ~= "MouseButton2" then
@@ -1027,11 +1027,11 @@ local function Read()
 					end
 				end
 			end
-			
+
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
-			
+
 
 			Index += 1
 			RunService.Stepped:Wait()
