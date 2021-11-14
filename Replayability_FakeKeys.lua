@@ -59,6 +59,17 @@ local Dancing = false -- When you is are dancing
 local LastMousePositionR = {} -- For setting mouse position after checkpoint
 local LastMousePositionW = {} -- For recording ok
 
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+
+local Zooming = false
+local LastZoomPosition = Vector3.new(0,0,0)
+
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+
 -- Read
 local RunFunction
 local ClimbFunction
@@ -229,6 +240,10 @@ local function getKeysDown()
 		UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1),
 		UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2),
 	}
+end
+
+local function getScrollWheelMovement()
+	return UserInputService.
 end
 
 local function SendFakeMouseButton(inputButton, isDown)
@@ -515,6 +530,16 @@ UserInputService.InputBegan:Connect(function(Input, GameProcessed)
 	end
 end)
 
+UserInputService.InputChanged:Connect(function(inputObject, gp)
+	if gp then return end
+	
+	if inputObject == Enum.UserInputType.MouseWheel then
+		LastZoomPosition = inputObject.Position
+		RunService.Heartbeat:Wait()
+		LastZoomPosition = Vector3.new(0,0,0)
+	end
+end)
+
 local JTOHPlayerScripts = PlayerScripts:FindFirstChild("PlayerScripts")
 if JTOHPlayerScripts then 
 	local Limiter = JTOHPlayerScripts:FindFirstChild("Framerate Limiter") 
@@ -541,6 +566,8 @@ Cursor.Visible = false
 Cursor.Parent = CursorGui
 
 -- Zoom Functions
+
+
 local Self -- Utilized for module zoom functions
 local ZoomSpring
 local EndLoop = false
@@ -818,6 +845,7 @@ local function Write()
 			--[[----------------------------------------------------------------------------------]]
 
 			WriteTable[10] = getKeysDown()
+			WriteTable[11] = LastZoomPosition.Z
 
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
@@ -926,6 +954,7 @@ local function Read()
 			--[[----------------------------------------------------------------------------------]]
 
 			local KeysDown = CurrentReadTable[10]
+			local ZoomPosition = CurrentReadTable[11]
 
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
@@ -1028,6 +1057,14 @@ local function Read()
 				
 				SendFakeMouseButton(Enum.UserInputType.MouseButton1, KeysDown[10])
 				SendFakeMouseButton(Enum.UserInputType.MouseButton2, KeysDown[11])
+			end
+			
+			if ZoomPosition then
+				if math.sign(ZoomPosition) == -1 then
+					mousescroll(-20)
+				elseif math.sign(ZoomPosition) == 1 then
+					mousescroll(20)
+				end
 			end
 
 			--[[----------------------------------------------------------------------------------]]
