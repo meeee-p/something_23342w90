@@ -242,10 +242,6 @@ local function getKeysDown()
 	}
 end
 
-local function getScrollWheelMovement()
-	return UserInputService.
-end
-
 local function SendFakeMouseButton(inputButton, isDown)
 	if inputButton == Enum.UserInputType.MouseButton1 then
 		if isDown then
