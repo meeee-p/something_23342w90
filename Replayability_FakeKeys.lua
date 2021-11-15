@@ -1107,9 +1107,9 @@ local function Read()
 			
 			if ScrollInfo then
 				if ScrollInfo == -1 then
-					mousescroll(-20)
+					mousescroll(-100)
 				elseif ScrollInfo == 1 then
-					mousescroll(20)
+					mousescroll(100)
 				end
 			end
 
@@ -1126,7 +1126,7 @@ local function Read()
 end
 coroutine.wrap(Read)()
 
-SendNotification("Replayability v1.6.6.1 loaded!", 3)
+SendNotification("Replayability v1.6.6.3 loaded!", 3)
 
 game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 	FullAbort = true
