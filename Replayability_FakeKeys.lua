@@ -63,8 +63,11 @@ local LastMousePositionW = {} -- For recording ok
 --[[----------------------------------------------------------------------------------]]
 --[[----------------------------------------------------------------------------------]]
 
-local Zooming = false
-local LastZoomPosition = Vector3.new(0,0,0)
+local isZooming = false
+local ZoomingIn = false
+local ZoomingOut = false
+local lastZoom = 0
+local zoom = 0
 
 --[[----------------------------------------------------------------------------------]]
 --[[----------------------------------------------------------------------------------]]
@@ -526,15 +529,55 @@ UserInputService.InputBegan:Connect(function(Input, GameProcessed)
 	end
 end)
 
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+
+local function getZoom()
+	return (Camera.CFrame.Position - Camera.Focus.Position).Magnitude
+end
+
+local function onHeartbeat(et)
+	lastZoom = zoom
+	zoom = getZoom()
+end
+RunService.Heartbeat:Connect(onHeartbeat)
+
 UserInputService.InputChanged:Connect(function(inputObject, gp)
 	if gp then return end
 	
-	if inputObject == Enum.UserInputType.MouseWheel then
-		LastZoomPosition = inputObject.Position
-		RunService.Heartbeat:Wait()
-		LastZoomPosition = Vector3.new(0,0,0)
+	if inputObject.UserInputType == Enum.UserInputType.MouseWheel then
+		if isZooming == false then
+			isZooming = true
+			print('im zooming!')
+
+			RunService.Heartbeat:Wait()
+
+			while isZooming do
+				local change = lastZoom - zoom
+				print(change)
+				if math.abs(change) > 0.1 then
+					if change > 0 then
+						ZoomingOut = true
+					elseif change < 0 then
+						ZoomingIn = true
+					end
+				else
+					isZooming = false
+					ZoomingIn = false
+					ZoomingOut = false
+					print('done zooming!')
+				end
+
+				RunService.Heartbeat:Wait()
+			end 
+		end
 	end
 end)
+
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
+--[[----------------------------------------------------------------------------------]]
 
 local JTOHPlayerScripts = PlayerScripts:FindFirstChild("PlayerScripts")
 if JTOHPlayerScripts then 
@@ -841,7 +884,14 @@ local function Write()
 			--[[----------------------------------------------------------------------------------]]
 
 			WriteTable[10] = getKeysDown()
-			WriteTable[11] = LastZoomPosition.Z
+			
+			if ZoomingOut then
+				WriteTable[11] = -1
+			elseif ZoomingIn then
+				WriteTable[11] = 1
+			else
+				WriteTable[11] = 0
+			end
 
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
@@ -950,7 +1000,7 @@ local function Read()
 			--[[----------------------------------------------------------------------------------]]
 
 			local KeysDown = CurrentReadTable[10]
-			local ZoomPosition = CurrentReadTable[11]
+			local ScrollInfo = CurrentReadTable[11]
 
 			--[[----------------------------------------------------------------------------------]]
 			--[[----------------------------------------------------------------------------------]]
@@ -1055,10 +1105,10 @@ local function Read()
 				SendFakeMouseButton(Enum.UserInputType.MouseButton2, KeysDown[11])
 			end
 			
-			if ZoomPosition then
-				if math.sign(ZoomPosition) == -1 then
+			if ScrollInfo then
+				if ScrollInfo == -1 then
 					mousescroll(-20)
-				elseif math.sign(ZoomPosition) == 1 then
+				elseif ScrollInfo == 1 then
 					mousescroll(20)
 				end
 			end
