@@ -75,6 +75,7 @@ local zoom = 0
 
 local keyboardSoundW = Instance.new("Sound")
 keyboardSoundW.SoundId = "rbxassetid://8011642055"
+keyboardSoundW.Volume = 1.75
 
 ContentProvider:PreloadAsync({keyboardSoundW})
 
