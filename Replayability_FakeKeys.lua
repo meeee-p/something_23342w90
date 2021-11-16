@@ -215,14 +215,12 @@ end
 --[[----------------------------------------------------------------------------------]]
 
 local function playKeyboardSound()
-	coroutine.resume(coroutine.create(function()
-		local clone = keyboardSoundW:Clone()
-		clone.Parent = game.Workspace
-		clone:Play()
-		wait(0.4)
-		clone:Stop()
-		clone:Destroy()
-	end))
+	local clone = keyboardSoundW:Clone()
+	clone.Parent = game.Workspace
+	clone:Play()
+	wait(0.4)
+	clone:Stop()
+	clone:Destroy()
 end
 
 local convertedCodes = {
@@ -284,10 +282,10 @@ end
 local function SendFakeKey(inputKey, isDown)
 	local convertedValue = getKeyValue(inputKey)
 
-	if isDown then
+	if isDown == true and UserInputService:IsKeyDown(inputKey) == false then
 		keypress(convertedValue)
-		playKeyboardSound()
-	else
+		coroutine.wrap(playKeyboardSound)()
+	elseif isDown == false then
 		keyrelease(convertedValue)
 	end
 end
@@ -1147,7 +1145,7 @@ local function Read()
 end
 coroutine.wrap(Read)()
 
-SendNotification("Replayability v1.6.6.1 loaded!", 3)
+SendNotification("Replayability v1.6.6.5 loaded!", 3)
 
 game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 	FullAbort = true
