@@ -297,13 +297,13 @@ local function SendFakeKey(inputKey, isDown)
 	if isDown == true and UserInputService:IsKeyDown(inputKey) == false then
 		if inputKey ~= Enum.KeyCode.LeftShift then
 			keypress(convertedValue)
-			coroutine.wrap(playKeyboardSound, true)()
+			coroutine.wrap(playKeyboardSound, isDown)()
 		end
 		
 	elseif isDown == false and UserInputService:IsKeyDown(inputKey) == true then
 		if inputKey ~= Enum.KeyCode.LeftShift then
 			keyrelease(convertedValue)
-			coroutine.wrap(playKeyboardSound, false)()
+			coroutine.wrap(playKeyboardSound, isDown)()
 		end
 	end
 end
