@@ -215,12 +215,14 @@ end
 --[[----------------------------------------------------------------------------------]]
 
 local function playKeyboardSound()
-	local clone = keyboardSoundW:Clone()
-	clone.Parent = game.Workspace
-	clone:Play()
-	wait(0.4)
-	clone:Stop()
-	clone:Destroy()
+	coroutine.resume(coroutine.create(function()
+		local clone = keyboardSoundW:Clone()
+		clone.Parent = game.Workspace
+		clone:Play()
+		wait(0.4)
+		clone:Stop()
+		clone:Destroy()
+	end))
 end
 
 local convertedCodes = {
@@ -284,7 +286,7 @@ local function SendFakeKey(inputKey, isDown)
 
 	if isDown then
 		keypress(convertedValue)
-		coroutine.wrap(playKeyboardSound)()
+		playKeyboardSound()
 	else
 		keyrelease(convertedValue)
 	end
