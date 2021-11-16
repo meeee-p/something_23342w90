@@ -284,7 +284,7 @@ local function SendFakeKey(inputKey, isDown)
 
 	if isDown then
 		keypress(convertedValue)
-		playKeyboardSound()
+		coroutine.wrap(playKeyboardSound)()
 	else
 		keyrelease(convertedValue)
 	end
