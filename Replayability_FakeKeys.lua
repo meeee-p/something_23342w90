@@ -74,8 +74,13 @@ local lastZoom = 0
 local zoom = 0
 
 local keyboardSoundW = Instance.new("Sound")
-keyboardSoundW.SoundId = "rbxassetid://8011642055"
+--keyboardSoundW.SoundId = "rbxassetid://8011642055" -- old sound
+keyboardSoundW.SoundId = "rbxassetid://8019144518"
 keyboardSoundW.Volume = 1.75
+
+local onSound = keyboardSoundW:Clone()
+local offSound = keyboardSoundW:Clone()
+offSound.TimePosition = 0.255
 
 ContentProvider:PreloadAsync({keyboardSoundW})
 
@@ -215,8 +220,14 @@ end
 --[[----------------------------------------------------------------------------------]]
 --[[----------------------------------------------------------------------------------]]
 
-local function playKeyboardSound()
-	local clone = keyboardSoundW:Clone()
+local function playKeyboardSound(isDown)
+	local clone
+	if isDown then
+		clone = onSound:Clone()
+	else
+		clone = offSound:Clone()
+	end
+	
 	clone.Parent = game.Workspace
 	clone:Play()
 	wait(0.4)
@@ -284,10 +295,17 @@ local function SendFakeKey(inputKey, isDown)
 	local convertedValue = getKeyValue(inputKey)
 
 	if isDown == true and UserInputService:IsKeyDown(inputKey) == false then
-		keypress(convertedValue)
-		coroutine.wrap(playKeyboardSound)()
+		if inputKey ~= Enum.KeyCode.LeftShift then
+			keypress(convertedValue)
+			coroutine.wrap(playKeyboardSound, true)()
+		end
+		
 	elseif isDown == false then
-		keyrelease(convertedValue)
+		if inputKey ~= Enum.KeyCode.LeftShift then
+			keyrelease(convertedValue)
+			coroutine.wrap(playKeyboardSound, false)()
+		end
+		
 	end
 end
 
