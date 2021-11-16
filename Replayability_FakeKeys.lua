@@ -230,7 +230,7 @@ local function playKeyboardSound(isDown)
 	
 	clone.Parent = game.Workspace
 	clone:Play()
-	wait(0.4)
+	wait(0.15)
 	clone:Stop()
 	clone:Destroy()
 end
@@ -300,12 +300,11 @@ local function SendFakeKey(inputKey, isDown)
 			coroutine.wrap(playKeyboardSound, true)()
 		end
 		
-	elseif isDown == false then
+	elseif isDown == false and UserInputService:IsKeyDown(inputKey) == true then
 		if inputKey ~= Enum.KeyCode.LeftShift then
 			keyrelease(convertedValue)
 			coroutine.wrap(playKeyboardSound, false)()
 		end
-		
 	end
 end
 
