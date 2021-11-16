@@ -29,6 +29,10 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
+--
+local SoundService = game:GetService("SoundService")
+local ContentProvider = game:GetService("ContentProvider")
+--
 
 -- Player
 local LocalPlayer = Players.LocalPlayer
@@ -68,6 +72,11 @@ local ZoomingIn = false
 local ZoomingOut = false
 local lastZoom = 0
 local zoom = 0
+
+local keyboardSoundW = Instance.new("Sound")
+keyboardSoundW.SoundId = "rbxassetid://8011642055"
+
+ContentProvider:PreloadAsync({keyboardSoundW})
 
 --[[----------------------------------------------------------------------------------]]
 --[[----------------------------------------------------------------------------------]]
@@ -205,6 +214,15 @@ end
 --[[----------------------------------------------------------------------------------]]
 --[[----------------------------------------------------------------------------------]]
 
+local function playKeyboardSound()
+	local clone = keyboardSoundW:Clone()
+	clone.Parent = game.Workspace
+	clone:Play()
+	wait(0.4)
+	clone:Stop()
+	clone:Destroy()
+end
+
 local convertedCodes = {
 	[113] = 0x51, --q
 	[119] = 0x57, --w
@@ -266,6 +284,7 @@ local function SendFakeKey(inputKey, isDown)
 
 	if isDown then
 		keypress(convertedValue)
+		playKeyboardSound()
 	else
 		keyrelease(convertedValue)
 	end
@@ -1126,7 +1145,7 @@ local function Read()
 end
 coroutine.wrap(Read)()
 
-SendNotification("Replayability v1.6.6.3 loaded!", 3)
+SendNotification("Replayability v1.6.6.1 loaded!", 3)
 
 game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 	FullAbort = true
