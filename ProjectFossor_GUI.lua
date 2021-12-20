@@ -102,9 +102,9 @@ MouseBehavior.Parent = Container
 
 local MousePosition = frameTemplate:Clone()
 MousePosition.Name = "MousePosition"
-MouseBehavior.LayoutOrder = 8
-MouseBehavior.Label.Text = "Position: (0,0)"
-MouseBehavior.Parent = Container
+MousePosition.LayoutOrder = 8
+MousePosition.Label.Text = "Position: (0,0)"
+MousePosition.Parent = Container
 
 local Mode = frameTemplate:Clone()
 Mode.Name = "Mode"
