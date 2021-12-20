@@ -1,4 +1,5 @@
 local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ProjectFossor"
 syn.protect_gui(ScreenGui)
 
 local Container = Instance.new("Frame")
@@ -104,6 +105,12 @@ MousePosition.Name = "MousePosition"
 MouseBehavior.LayoutOrder = 8
 MouseBehavior.Label.Text = "Position: (0,0)"
 MouseBehavior.Parent = Container
+
+local Mode = frameTemplate:Clone()
+Mode.Name = "Mode"
+Mode.LayoutOrder = 9
+Mode.Label.Text = "Mode: Off"
+Mode.Parent = Container
 
 Container.Parent = ScreenGui
 
